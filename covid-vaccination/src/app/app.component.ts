@@ -86,12 +86,21 @@ export class AppComponent implements OnInit {
       const phone = this.formatString(item.phone);
       return name.includes(filterText) || indentificationCard.includes(filterText) || phone.includes(filterText);
     }) as CustomerData[];
+    this.showItem.fill(false);
   }
 
   formatString(str: string) {
     return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase();
   }
 
+  showCustomer(index: number) {
+    if (this.showItem[index]) {
+      this.showItem[index] = false;
+    } else {
+      this.showItem.fill(false);
+      this.showItem[index] = true;
+    }
+  }
 
   exportToExcel() {
     this.data.forEach((row: any) => {

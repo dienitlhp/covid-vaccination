@@ -36,7 +36,7 @@
       </thead>
       <tbody>
         <ng-template ngFor let-data let-i="index" [ngForOf]="nestedTable.data">
-          <tr (click)="showItem[i] = !showItem[i]">
+          <tr (click)="showCustomer(i)">
             <td>{{ data.sl }}</td>
             <td>{{ data.name }}</td>
             <td>{{ data.gender }}</td>
