@@ -8,7 +8,7 @@
     position: relative;
     .logo {
       width: 200px;
-      height: 50px;
+      height: 40px;
       background-image: url('../assets/images/logo.png');
       background-repeat: no-repeat;
       background-size: contain;
@@ -17,7 +17,7 @@
 
     .title {
       width: 100%;
-      font-size: 25px;
+      font-size: 20px;
       font-family: sans-serif;
       text-align: center;
       font-weight: bold;
@@ -54,17 +54,25 @@
   .customer-data {
     position: relative;
     .title {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: bold;
-      line-height: 50px;
+      line-height: 32px;
+      text-align: center;
+      font-family: sans-serif;
+    }
+
+    .injected-date {
+      text-align: center;
+      font-weight: bold;
+      line-height: 32px;
       text-align: center;
       font-family: sans-serif;
     }
 
     .injected-info {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: bold;
-      line-height: 30px;
+      line-height: 25px;
       text-align: center;
       font-family: sans-serif;
       cursor: pointer;
@@ -72,7 +80,7 @@
 
     .search-container {
       width: 500px;
-      margin: 20px auto;
+      margin: 10px auto;
     }
 
     nz-table {

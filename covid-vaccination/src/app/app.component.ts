@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ExportExcelService } from './services/export-excel.service';
 import * as XLSX from "xlsx";
-import { filter } from 'lodash-es';
+import { cloneDeep, filter } from 'lodash-es';
 
 @Component({
   selector: 'app-root',
@@ -16,11 +16,17 @@ export class AppComponent implements OnInit {
   dataForExcel: any[] = [];
   searchText = '';
   injectedNumber = 0;
+  formatDate = '';
 
   constructor(public excelService: ExportExcelService) { }
 
   ngOnInit() {
     this.showItem.fill(false);
+    const today = new Date();
+    const date = today.toJSON().slice(0, 10);
+    this.formatDate = date.slice(8, 10) + '/'
+      + date.slice(5, 7) + '/'
+      + date.slice(0, 4);
   };
 
   onFileChange(ev: any) {
@@ -103,8 +109,13 @@ export class AppComponent implements OnInit {
   }
 
   exportToExcel() {
+    this.dataForExcel = [];
     this.data.forEach((row: any) => {
-      this.dataForExcel.push(Object.values(row))
+      const rowExcel = cloneDeep(row);
+      rowExcel.firstChecked = row.firstChecked ? 'Yes' : 'No';
+      rowExcel.secondChecked = row.secondChecked ? 'Yes' : 'No';
+      rowExcel.done = row.done ? 'Yes' : 'No';
+      this.dataForExcel.push(Object.values(rowExcel))
     })
     const header = [
       'Stt',
@@ -132,10 +143,9 @@ export class AppComponent implements OnInit {
       'Check-in Kim Mã',
       'Check-in Bệnh viện',
       'Đã tiêm thành công'
-
     ]
     let reportData = {
-      title: 'DANH SÁCH ĐỐI TƯỢNG ĐĂNG KÝ TIÊM VẮC XIN COVID-19',
+      title: `DANH SÁCH ĐỐI TƯỢNG ĐĂNG KÝ TIÊM VẮC XIN COVID-19 - ngày ${this.formatDate}`,
       header: header,
       data: this.dataForExcel
     }
