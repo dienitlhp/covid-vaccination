@@ -18,7 +18,7 @@
     <div class="search-container">
       <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
         <input type="text" [(ngModel)]="searchText" (ngModelChange)="filterData()" nz-input
-          placeholder="Nhập tên, số điện thoại hoặc số cmt/cccd" />
+          placeholder="Nhập tên, Số điện thoại hoặc Số CMND" />
       </nz-input-group>
       <ng-template #suffixIconButton>
         <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
@@ -27,8 +27,8 @@
     <nz-table #nestedTable [nzData]="displayData" [nzPageSize]="5">
       <thead>
         <tr>
-          <th>Stt</th>
-          <th>Họ và tên</th>
+          <th>STT</th>
+          <th>Họ và Tên</th>
           <th>Giới tính</th>
           <th>Ngày sinh</th>
           <th>Số điện thoại</th>
