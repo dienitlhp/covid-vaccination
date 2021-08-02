@@ -86,6 +86,11 @@
     nz-table {
       width: 90%;
       margin: 0 auto;
+      thead {
+        th {
+          font-weight: bold;
+        }
+      }
     }
 
     .export-excel {

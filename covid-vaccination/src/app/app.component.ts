@@ -55,8 +55,8 @@ export class AppComponent implements OnInit {
       this.data.push({
         sl: Object.values(item)[0] as number,
         name: item['__EMPTY'] || '',
-        gender: item['__EMPTY_1'] || '',
-        birth: item['__EMPTY_2'] || '',
+        gender: this.formatGender(item['__EMPTY_1']),
+        birth: this.formatBirth(item['__EMPTY_2']),
         email: item['__EMPTY_3'] || '',
         priotyId: item['__EMPTY_4'] || '',
         job: item['__EMPTY_5'] || '',
@@ -75,9 +75,9 @@ export class AppComponent implements OnInit {
         address: item['__EMPTY_18'] || '',
         healthfacilityId: item['__EMPTY_19'] || '',
         note: item['__EMPTY_20'] || '',
-        firstChecked: item['__EMPTY_20'] || false,
-        secondChecked: item['__EMPTY_21'] || false,
-        done: item['__EMPTY_22'] || false
+        firstChecked: item['__EMPTY_20'] === 'YES' ? true : false,
+        secondChecked: item['__EMPTY_21'] === 'YES' ? true : false,
+        done: item['__EMPTY_22'] === 'YES' ? true : false
       })
     });
     this.countInjectedNumber();
@@ -93,6 +93,18 @@ export class AppComponent implements OnInit {
       return name.includes(filterText) || indentificationCard.includes(filterText) || phone.includes(filterText);
     }) as CustomerData[];
     this.showItem.fill(false);
+  }
+
+  formatBirth(str: string) {
+    if (!str) return '';
+
+    return `${str.slice(6,8)}/${str.slice(4,6)}/${str.slice(0,4)}`;
+  }
+
+  formatGender(str: any) {
+    if (!str || str === 0) return 'Không rõ';
+
+    return str === 1 ? 'Nam': 'Nữ';
   }
 
   formatString(str: string) {
@@ -115,10 +127,16 @@ export class AppComponent implements OnInit {
       rowExcel.firstChecked = row.firstChecked ? 'Yes' : 'No';
       rowExcel.secondChecked = row.secondChecked ? 'Yes' : 'No';
       rowExcel.done = row.done ? 'Yes' : 'No';
+      if (row.gender === 'Không rõ') {
+        rowExcel.gender = 0
+      } else {
+        rowExcel.gender = row.gender === 'Nam' ? 1 : 2;
+      }
+      rowExcel.birth = `${row.birth.slice(6,10)}${row.birth.slice(3,5)}${row.birth.slice(0,2)}`
       this.dataForExcel.push(Object.values(rowExcel))
     })
     const header = [
-      'Stt',
+      'STT',
       'Họ và tên',
       'Giới tính',
       'Ngày sinh',
