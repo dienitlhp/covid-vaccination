@@ -9,7 +9,7 @@ export class AppService {
 
   constructor(private readonly http: HttpClient) { }
 
-  url = 'https://covid-vaccination-server.herokuapp.com:8000/'
+  url = 'https://covid-vaccination-server.herokuapp.com/'
 
 
   getData(): Observable<any> {
