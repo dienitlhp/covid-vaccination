@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ExportExcelService } from './services/export-excel.service';
 import * as XLSX from "xlsx";
 import { cloneDeep, filter } from 'lodash-es';
+import { AppService } from './app.service';
 
 @Component({
   selector: 'app-root',
@@ -18,9 +19,15 @@ export class AppComponent implements OnInit {
   injectedNumber = 0;
   formatDate = '';
 
-  constructor(public excelService: ExportExcelService) { }
+  constructor(public excelService: ExportExcelService, private api: AppService) { }
 
   ngOnInit() {
+    this.api.getData().subscribe(data => {
+      this.data = data;
+      this.willDownload = true;
+      this.countInjectedNumber();
+      this.displayData = [...this.data];
+    })
     this.showItem.fill(false);
     const today = new Date();
     const date = today.toJSON().slice(0, 10);
@@ -121,54 +128,58 @@ export class AppComponent implements OnInit {
   }
 
   exportToExcel() {
-    this.dataForExcel = [];
-    this.data.forEach((row: any) => {
-      const rowExcel = cloneDeep(row);
-      rowExcel.firstChecked = row.firstChecked ? 'Yes' : 'No';
-      rowExcel.secondChecked = row.secondChecked ? 'Yes' : 'No';
-      rowExcel.done = row.done ? 'Yes' : 'No';
-      if (row.gender === 'Không rõ') {
-        rowExcel.gender = 0
-      } else {
-        rowExcel.gender = row.gender === 'Nam' ? 1 : 2;
-      }
-      rowExcel.birth = `${row.birth.slice(6,10)}${row.birth.slice(3,5)}${row.birth.slice(0,2)}`
-      this.dataForExcel.push(Object.values(rowExcel))
-    })
-    const header = [
-      'STT',
-      'Họ và tên',
-      'Giới tính',
-      'Ngày sinh',
-      'E-mail',
-      'Mã nhóm đối tượng ưu tiên',
-      'Nghề nghiệp',
-      'Đơn vị công tác',
-      'Số điện thoại',
-      'Số CMT/CCCD/Hộ chiếu',
-      'Số thẻ bảo hiểm y tế',
-      'Dân tộc',
-      'Quốc tịch',
-      'Tỉnh/Thành phố',
-      'Mã Tỉnh/Thành phố',
-      'Quận/Huyện',
-      'Mã Quận/Huyện',
-      'Xã Phường',
-      'Mã Xã Phường',
-      'Địa chỉ chi tiết',
-      'Mã cơ sở y tế tiêm',
-      'Ghi chú',
-      'Check-in Kim Mã',
-      'Check-in Bệnh viện',
-      'Đã tiêm thành công'
-    ]
-    let reportData = {
-      title: `DANH SÁCH ĐỐI TƯỢNG ĐĂNG KÝ TIÊM VẮC XIN COVID-19 - ngày ${this.formatDate}`,
-      header: header,
-      data: this.dataForExcel
-    }
+    console.log(this.data);
+    this.api.updateData(this.data).subscribe(res => {
+      console.log(res);
+    });
+    // this.dataForExcel = [];
+    // this.data.forEach((row: any) => {
+    //   const rowExcel = cloneDeep(row);
+    //   rowExcel.firstChecked = row.firstChecked ? 'Yes' : 'No';
+    //   rowExcel.secondChecked = row.secondChecked ? 'Yes' : 'No';
+    //   rowExcel.done = row.done ? 'Yes' : 'No';
+    //   if (row.gender === 'Không rõ') {
+    //     rowExcel.gender = 0
+    //   } else {
+    //     rowExcel.gender = row.gender === 'Nam' ? 1 : 2;
+    //   }
+    //   rowExcel.birth = `${row.birth.slice(6,10)}${row.birth.slice(3,5)}${row.birth.slice(0,2)}`
+    //   this.dataForExcel.push(Object.values(rowExcel))
+    // })
+    // const header = [
+    //   'STT',
+    //   'Họ và tên',
+    //   'Giới tính',
+    //   'Ngày sinh',
+    //   'E-mail',
+    //   'Mã nhóm đối tượng ưu tiên',
+    //   'Nghề nghiệp',
+    //   'Đơn vị công tác',
+    //   'Số điện thoại',
+    //   'Số CMT/CCCD/Hộ chiếu',
+    //   'Số thẻ bảo hiểm y tế',
+    //   'Dân tộc',
+    //   'Quốc tịch',
+    //   'Tỉnh/Thành phố',
+    //   'Mã Tỉnh/Thành phố',
+    //   'Quận/Huyện',
+    //   'Mã Quận/Huyện',
+    //   'Xã Phường',
+    //   'Mã Xã Phường',
+    //   'Địa chỉ chi tiết',
+    //   'Mã cơ sở y tế tiêm',
+    //   'Ghi chú',
+    //   'Check-in Kim Mã',
+    //   'Check-in Bệnh viện',
+    //   'Đã tiêm thành công'
+    // ]
+    // let reportData = {
+    //   title: `DANH SÁCH ĐỐI TƯỢNG ĐĂNG KÝ TIÊM VẮC XIN COVID-19 - ngày ${this.formatDate}`,
+    //   header: header,
+    //   data: this.dataForExcel
+    // }
 
-    this.excelService.exportExcel(reportData);
+    // this.excelService.exportExcel(reportData);
   }
 
   changeCustomerData(changedData: CustomerData, i: number) {
