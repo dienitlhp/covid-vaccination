@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ExportExcelService } from './services/export-excel.service';
 import * as XLSX from "xlsx";
-import { cloneDeep, filter } from 'lodash-es';
+import { cloneDeep, filter, orderBy } from 'lodash-es';
 import { AppService } from './app.service';
 
 @Component({
@@ -26,6 +26,8 @@ export class AppComponent implements OnInit {
   defaultPassword = 'vja2021';
   showInputFile = false;
   showLoading = false;
+  injectedSelected = false;
+  notInjectedSelected = false;
 
   header = [
     'STT',
@@ -71,7 +73,8 @@ export class AppComponent implements OnInit {
       res.results.forEach((data: any) => {
         this.data.push(data.data);
       });
-      this.displayData = [...this.data];
+      const data = [...this.data];
+      this.displayData = orderBy(data, 'sl', 'asc');
       this.countInjectedNumber();
       this.willDownload = true;
     })
@@ -155,7 +158,14 @@ export class AppComponent implements OnInit {
       const name = this.formatString(item.name.toString());
       const indentificationCard = this.formatString(item.indentificationCard.toString());
       const phone = this.formatString(item.phone.toString());
-      return name.includes(filterText) || indentificationCard.includes(filterText) || phone.includes(filterText);
+      let select = true;
+      if (this.injectedSelected && !this.notInjectedSelected) {
+        select = !!item.injected;
+      }
+      if (!this.injectedSelected && this.notInjectedSelected) {
+        select = !item.injected;
+      }
+      return (name.includes(filterText) || indentificationCard.includes(filterText) || phone.includes(filterText)) && select;
     }) as CustomerData[];
     this.showItem.fill(false);
   }
@@ -204,9 +214,10 @@ export class AppComponent implements OnInit {
     this.excelService.exportExcel(reportData);
   }
 
-  changeCustomerData(changedData: CustomerData, i: number) {
+  changeCustomerData(changedData: CustomerData) {
     this.changedCustomer.push(changedData);
-    this.data[i] = changedData;
+    const changedIndex = this.data.findIndex(item => item.sl == changedData.sl)
+    this.data[changedIndex] = changedData;
     this.countInjectedNumber();
   }
 

@@ -18,7 +18,7 @@
   }
 
   .get-started {
-    background-image: url('../assets/images/getstarted.png');
+    background-image: url('../assets/images/get-started.png');
     width: 135px;
     height: 41px;
     background-size: cover;
@@ -56,6 +56,7 @@
       line-height: 32px;
       text-align: center;
       font-family: sans-serif;
+      color: honeydew;
     }
 
     .injected-date {
@@ -64,6 +65,7 @@
       line-height: 32px;
       text-align: center;
       font-family: sans-serif;
+      color: honeydew;
     }
 
     .injected-info {
@@ -73,11 +75,36 @@
       text-align: center;
       font-family: sans-serif;
       cursor: pointer;
+      color: honeydew;
     }
 
     .search-container {
-      width: 500px;
+      width: 700px;
       margin: 10px auto;
+      position: relative;
+
+      .injected-filter, .not-injected-filter {
+        position: absolute;
+        width: 100px;
+        line-height: 31px;
+        background: white;
+        text-align: center;
+        top: 0px;
+        cursor: pointer;
+      }
+
+      .injected-filter {
+        right: -125px;
+      }
+
+      .not-injected-filter {
+        right: -245px;
+      }
+
+      .selected {
+        background: #1890ff;
+        color: #fff;
+      }
     }
 
     nz-table {

@@ -14,7 +14,6 @@
   <div *ngIf="data.length" class="customer-data">
     <div class="title">DANH SÁCH ĐỐI TƯỢNG ĐĂNG KÝ TIÊM VẮC XIN COVID-19</div>
     <div class="injected-date">Ngày tiêm chủng: {{ formatDate }}</div>
-    <div class="injected-info">Tổng số nhân viên đã được tiêm trong danh sách: {{ injectedNumber }}</div>
     <div class="search-container">
       <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
         <input type="text" [(ngModel)]="searchText" (ngModelChange)="filterData()" nz-input
@@ -23,6 +22,11 @@
       <ng-template #suffixIconButton>
         <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
       </ng-template>
+
+      <div class="injected-filter" [ngClass]="injectedSelected ? 'selected': 'none'"
+        (click)="injectedSelected = !injectedSelected; filterData();">Đã tiêm</div>
+      <div class="not-injected-filter" [ngClass]="notInjectedSelected ? 'selected': 'none'"
+        (click)="notInjectedSelected = !notInjectedSelected; filterData();">Chưa tiêm</div>
     </div>
     <nz-table #nestedTable [nzData]="displayData" [nzPageSize]="5">
       <thead>
@@ -46,7 +50,7 @@
             <td>{{ data.injected ? 'Đã được tiêm' : 'Chưa được tiêm' }}</td>
           </tr>
           <tr [nzExpand]="showItem[i]">
-            <customer-form [customerData]="data" (customerDataChange)="changeCustomerData($event, i)"></customer-form>
+            <customer-form [customerData]="data" (customerDataChange)="changeCustomerData($event)"></customer-form>
           </tr>
         </ng-template>
       </tbody>

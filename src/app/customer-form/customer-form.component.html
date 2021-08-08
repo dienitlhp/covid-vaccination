@@ -7,10 +7,10 @@
     <nz-descriptions-item nzTitle="CMT/CCCD">{{ customerData.indentificationCard }}</nz-descriptions-item>
     <nz-descriptions-item nzTitle="Địa chỉ">{{ customerData.workAdress }}</nz-descriptions-item>
     <nz-descriptions-item [nzSpan]="4" nzTitle="Tiêm chủng">
-      <label class="injection-info" nz-checkbox [(ngModel)]="customerData.firstCheckin" (ngModelChange)="saveData()">Check-in tại Kim Mã</label>
-      <label class="injection-info" nz-checkbox [(ngModel)]="customerData.secondCheckin" (ngModelChange)="saveData()">Check-in tại Bệnh viện</label>
-      <label class="injection-info" nz-checkbox [(ngModel)]="customerData.injected" (ngModelChange)="saveData()">Đã tiêm xong</label>
-      <label class="injection-info" nz-checkbox [(ngModel)]="customerData.notQualified" (ngModelChange)="saveData()">Không tiêm/ không đủ điều kiện tiêm</label>
+      <label class="injection-info" nz-checkbox [(ngModel)]="customerData.firstCheckin" (ngModelChange)="changeFirstCheckin()">Check-in tại Kim Mã</label>
+      <label class="injection-info" nz-checkbox [(ngModel)]="customerData.secondCheckin" (ngModelChange)="changeSecondCheckin()">Check-in tại Bệnh viện</label>
+      <label class="injection-info" nz-checkbox [(ngModel)]="customerData.injected" (ngModelChange)="changeInjected()">Đã tiêm xong</label>
+      <label class="injection-info" nz-checkbox [(ngModel)]="customerData.notQualified" (ngModelChange)="changeNotQualified()">Không tiêm/ không đủ điều kiện tiêm</label>
     </nz-descriptions-item>
     <nz-descriptions-item [nzSpan]="3" nzTitle="Ghi chú">
       <textarea rows="2" nz-input [(ngModel)]="customerData.note" (ngModelChange)="saveData()"></textarea>

@@ -22,6 +22,28 @@ export class CustomerFormComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  changeFirstCheckin() {
+    this.saveData();
+  }
+
+  changeSecondCheckin() {
+    this.saveData();
+  }
+
+  changeInjected() {
+    if (this.customerData.injected) {
+      this.customerData.notQualified = false;
+    }
+    this.saveData();
+  }
+
+  changeNotQualified() {
+    if (this.customerData.notQualified) {
+      this.customerData.injected = false;
+    }
+    this.saveData();
+  }
+
   saveData() {
     this.customerDataChange.emit(this.customerData);
   }
