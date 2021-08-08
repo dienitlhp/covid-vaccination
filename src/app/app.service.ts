@@ -9,15 +9,21 @@ export class AppService {
 
   constructor(private readonly http: HttpClient) { }
 
-  url = 'https://covid-vaccination-server.herokuapp.com/'
+  url = 'https://covid-vaccination-server.herokuapp.com/db'
 
 
   getData(): Observable<any> {
     return this.http.get(this.url);
   }
 
-  updateData(data: any) {
+  createDataBase(data: any) {
     return this.http.post(this.url, {
+      data
+    }, { responseType: 'text' })
+  }
+
+  updateDataBase(data: any) {
+    return this.http.put(this.url, {
       data
     }, { responseType: 'text' })
   }

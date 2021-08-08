@@ -1,12 +1,12 @@
 <div class="container">
-  <div class="header">
-    <div style="width: 100%; height: 20px;"></div>
-    <div class="logo"></div>
-    <div class="title">HỆ THỐNG QUẢN LÝ TIÊM CHỦNG - VĂN PHÒNG MIỀN BẮC</div>
+  <nz-spin *ngIf="showLoading" class="loading" nzSize="large" [nzSpinning]="showLoading"></nz-spin>
+  <div id="triggerInput" (click)="input.click()">
   </div>
-  <div class="import-excel-container" (click)="input.click()" *ngIf="!data.length">
-    <i nz-icon nzType="upload" nzTheme="outline"></i>
-    Tải lên file excel
+
+  <div class="get-started" (click)="getDataFromDb()" *ngIf="!data.length">
+  </div>
+
+  <div class="import-excel" (click)="openPasswordModal()" *ngIf="!data.length">
   </div>
 
   <input #input class="input-file" type="file" (change)="onFileChange($event)" />
@@ -43,7 +43,7 @@
             <td>{{ data.gender }}</td>
             <td>{{ data.birth }}</td>
             <td>{{ data.phone }}</td>
-            <td>{{ data.done ? 'Đã được tiêm' : 'Chưa được tiêm' }}</td>
+            <td>{{ data.injected ? 'Đã được tiêm' : 'Chưa được tiêm' }}</td>
           </tr>
           <tr [nzExpand]="showItem[i]">
             <customer-form [customerData]="data" (customerDataChange)="changeCustomerData($event, i)"></customer-form>
@@ -51,11 +51,28 @@
         </ng-template>
       </tbody>
     </nz-table>
-    <div *ngIf="willDownload" class="export-excel">
-      <button nz-button nzType="primary" nzSize="default" nzShape="round" (click)="exportToExcel()">
+    <div *ngIf="willDownload" class="export-container">
+      <button class="export-button" nz-button nzType="primary" nzSize="default" nzShape="round"
+        (click)="exportToExcel()">
         <i nz-icon nzType="download"></i>
         Export to excel
+      </button>
+      <button class="save-button" nz-button nzType="primary" nzSize="default" nzShape="round" (click)="saveToDB()">
+        Save to DB
       </button>
     </div>
   </div>
 </div>
+
+<nz-modal [(nzVisible)]="showModal" nzTitle="Nhập mật khẩu để tiếp tục" (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <nz-input-group [nzSuffix]="suffixTemplate">
+      <input [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="input password"
+        [(ngModel)]="password" />
+    </nz-input-group>
+    <ng-template #suffixTemplate>
+      <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="passwordVisible = !passwordVisible"></i>
+    </ng-template>
+  </ng-container>
+</nz-modal>

@@ -68,7 +68,7 @@ export class ExportExcelService {
             }
           }
         });
-        column.width = maxLength < 10 ? 10 : maxLength + 5;
+        column.width = maxLength < 10 ? 10 : maxLength;
       }
     });
 

@@ -17,6 +17,8 @@ import { CustomerFormComponent } from './customer-form/customer-form.component';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 registerLocaleData(en);
 
@@ -37,7 +39,9 @@ registerLocaleData(en);
     NzButtonModule,
     NzFormModule,
     NzDescriptionsModule,
-    NzCheckboxModule
+    NzCheckboxModule,
+    NzModalModule,
+    NzSpinModule
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent]

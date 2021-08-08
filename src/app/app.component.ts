@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ExportExcelService } from './services/export-excel.service';
 import * as XLSX from "xlsx";
 import { cloneDeep, filter } from 'lodash-es';
@@ -10,24 +10,51 @@ import { AppService } from './app.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  @ViewChild('input') inputElement!: HTMLInputElement;
   willDownload = false;
   data: CustomerData[] = [];
   displayData: CustomerData[] = [];
+  changedCustomer: CustomerData[] = [];
   showItem: boolean[] = [];
   dataForExcel: any[] = [];
   searchText = '';
   injectedNumber = 0;
   formatDate = '';
+  showModal = false;
+  passwordVisible = false;
+  password?: string;
+  defaultPassword = 'vja2021';
+  showInputFile = false;
+  showLoading = false;
+
+  header = [
+    'STT',
+    'Họ tên',
+    'Ngày sinh',
+    'Giới tính',
+    'Dân tộc',
+    'Nghề nghiệp',
+    'Điện thoại',
+    'E-mail',
+    'Số CMT/CCCD',
+    'Mã số BHYT',
+    'Tên đơn vị',
+    'Khoa/phòng/ban',
+    'Địa chỉ',
+    'Số nhà, tên phố/đường, thôn, xóm',
+    'Xã/phường',
+    'Quận/huyện',
+    'Tỉnh/thành',
+    'Check-in tại 302 Kim Mã',
+    'Check-in tại Medlatec',
+    'Đã tiêm xong',
+    'Không tiêm/ không đủ điều kiện tiêm',
+    'Ghi chú',
+  ]
 
   constructor(public excelService: ExportExcelService, private api: AppService) { }
 
   ngOnInit() {
-    this.api.getData().subscribe(data => {
-      this.data = data;
-      this.willDownload = true;
-      this.countInjectedNumber();
-      this.displayData = [...this.data];
-    })
     this.showItem.fill(false);
     const today = new Date();
     const date = today.toJSON().slice(0, 10);
@@ -35,6 +62,35 @@ export class AppComponent implements OnInit {
       + date.slice(5, 7) + '/'
       + date.slice(0, 4);
   };
+
+  getDataFromDb() {
+    this.data = [];
+    this.showLoading = true;
+    this.api.getData().subscribe(res => {
+      this.showLoading = false;
+      res.results.forEach((data: any) => {
+        this.data.push(data.data);
+      });
+      this.displayData = [...this.data];
+      this.countInjectedNumber();
+      this.willDownload = true;
+    })
+  }
+
+  openPasswordModal() {
+    this.showModal = true;
+  }
+
+  handleOk(): void {
+    this.showModal = false;
+    if (this.password === this.defaultPassword) {
+      document.getElementById('triggerInput')?.click();
+    }
+  }
+
+  handleCancel(): void {
+    this.showModal = false;
+  }
 
   onFileChange(ev: any) {
     let workBook: XLSX.WorkBook | null = null;
@@ -49,9 +105,7 @@ export class AppComponent implements OnInit {
         initial[name] = XLSX.utils.sheet_to_json(sheet);
         return initial;
       }, {});
-      json = Object.values(json)[0] as [];
-      json.splice(0, 1);
-      this.mapData(json);
+      this.mapData(json['Sheet1']);
       this.willDownload = true;
     }
     reader.readAsBinaryString(file);
@@ -60,43 +114,47 @@ export class AppComponent implements OnInit {
   mapData(json: any) {
     json.forEach((item: any) => {
       this.data.push({
-        sl: Object.values(item)[0] as number,
-        name: item['__EMPTY'] || '',
-        gender: this.formatGender(item['__EMPTY_1']),
-        birth: this.formatBirth(item['__EMPTY_2']),
-        email: item['__EMPTY_3'] || '',
-        priotyId: item['__EMPTY_4'] || '',
-        job: item['__EMPTY_5'] || '',
-        workUnit: item['__EMPTY_6'] || '',
-        phone: item['__EMPTY_7'] || '',
-        indentificationCard: item['__EMPTY_8'] || '',
-        healthInsuranceNumber: item['__EMPTY_9'] || '',
-        ethnic: item['__EMPTY_10'] || '',
-        nation: item['__EMPTY_11'] || '',
-        city: item['__EMPTY_12'] || '',
-        cityId: item['__EMPTY_13'] || '',
-        district: item['__EMPTY_14'] || '',
-        districtId: item['__EMPTY_15'] || '',
-        ward: item['__EMPTY_16'] || '',
-        wardId: item['__EMPTY_17'] || '',
-        address: item['__EMPTY_18'] || '',
-        healthfacilityId: item['__EMPTY_19'] || '',
-        note: item['__EMPTY_20'] || '',
-        firstChecked: item['__EMPTY_20'] === 'YES' ? true : false,
-        secondChecked: item['__EMPTY_21'] === 'YES' ? true : false,
-        done: item['__EMPTY_22'] === 'YES' ? true : false
+        sl: item[this.header[0]] || null,
+        name: item[this.header[1]] || '',
+        birth: item[this.header[2]] || '',
+        gender: item[this.header[3]] || '',
+        ethnic: item[this.header[4]] || '',
+        job: item[this.header[5]] || '',
+        phone: item[this.header[6]] || '',
+        email: item[this.header[7]] || '',
+        indentificationCard: item[this.header[8]] || '',
+        healthInsuranceNumber: item[this.header[9]] || '',
+        workName: item[this.header[10]],
+        workUnit: item[this.header[11]] || '',
+        address: item[this.header[12]] || '',
+        workAdress: item[this.header[13]],
+        ward: item[this.header[14]] || '',
+        district: item[this.header[15]] || '',
+        city: item[this.header[16]] || '',
+        firstCheckin: item[this.header[17]] === 'Yes' ? true : false,
+        secondCheckin: item[this.header[18]] === 'Yes' ? true : false,
+        injected: item[this.header[19]] === 'Yes' ? true : false,
+        notQualified: item[this.header[20]] === 'Yes' ? true : false,
+        note: item[this.header[21]] || ''
       })
     });
     this.countInjectedNumber();
     this.displayData = [...this.data];
+    this.createDatabase();
+  }
+
+  createDatabase() {
+    this.api.createDataBase(this.data).subscribe(res => {
+      console.log(res);
+    })
   }
 
   filterData() {
     const filterText = this.formatString(this.searchText);
     this.displayData = filter(this.data, (item) => {
-      const name = this.formatString(item.name);
-      const indentificationCard = this.formatString(item.indentificationCard);
-      const phone = this.formatString(item.phone);
+      const name = this.formatString(item.name.toString());
+      const indentificationCard = this.formatString(item.indentificationCard.toString());
+      const phone = this.formatString(item.phone.toString());
       return name.includes(filterText) || indentificationCard.includes(filterText) || phone.includes(filterText);
     }) as CustomerData[];
     this.showItem.fill(false);
@@ -105,13 +163,13 @@ export class AppComponent implements OnInit {
   formatBirth(str: string) {
     if (!str) return '';
 
-    return `${str.slice(6,8)}/${str.slice(4,6)}/${str.slice(0,4)}`;
+    return `${str.slice(6, 8)}/${str.slice(4, 6)}/${str.slice(0, 4)}`;
   }
 
   formatGender(str: any) {
     if (!str || str === 0) return 'Không rõ';
 
-    return str === 1 ? 'Nam': 'Nữ';
+    return str === 1 ? 'Nam' : 'Nữ';
   }
 
   formatString(str: string) {
@@ -128,96 +186,65 @@ export class AppComponent implements OnInit {
   }
 
   exportToExcel() {
-    console.log(this.data);
-    this.api.updateData(this.data).subscribe(res => {
-      console.log(res);
-    });
-    // this.dataForExcel = [];
-    // this.data.forEach((row: any) => {
-    //   const rowExcel = cloneDeep(row);
-    //   rowExcel.firstChecked = row.firstChecked ? 'Yes' : 'No';
-    //   rowExcel.secondChecked = row.secondChecked ? 'Yes' : 'No';
-    //   rowExcel.done = row.done ? 'Yes' : 'No';
-    //   if (row.gender === 'Không rõ') {
-    //     rowExcel.gender = 0
-    //   } else {
-    //     rowExcel.gender = row.gender === 'Nam' ? 1 : 2;
-    //   }
-    //   rowExcel.birth = `${row.birth.slice(6,10)}${row.birth.slice(3,5)}${row.birth.slice(0,2)}`
-    //   this.dataForExcel.push(Object.values(rowExcel))
-    // })
-    // const header = [
-    //   'STT',
-    //   'Họ và tên',
-    //   'Giới tính',
-    //   'Ngày sinh',
-    //   'E-mail',
-    //   'Mã nhóm đối tượng ưu tiên',
-    //   'Nghề nghiệp',
-    //   'Đơn vị công tác',
-    //   'Số điện thoại',
-    //   'Số CMT/CCCD/Hộ chiếu',
-    //   'Số thẻ bảo hiểm y tế',
-    //   'Dân tộc',
-    //   'Quốc tịch',
-    //   'Tỉnh/Thành phố',
-    //   'Mã Tỉnh/Thành phố',
-    //   'Quận/Huyện',
-    //   'Mã Quận/Huyện',
-    //   'Xã Phường',
-    //   'Mã Xã Phường',
-    //   'Địa chỉ chi tiết',
-    //   'Mã cơ sở y tế tiêm',
-    //   'Ghi chú',
-    //   'Check-in Kim Mã',
-    //   'Check-in Bệnh viện',
-    //   'Đã tiêm thành công'
-    // ]
-    // let reportData = {
-    //   title: `DANH SÁCH ĐỐI TƯỢNG ĐĂNG KÝ TIÊM VẮC XIN COVID-19 - ngày ${this.formatDate}`,
-    //   header: header,
-    //   data: this.dataForExcel
-    // }
+    this.dataForExcel = [];
+    this.data.forEach((row: any) => {
+      const rowExcel = cloneDeep(row);
+      rowExcel.firstCheckin = row.firstCheckin ? 'Yes' : 'No';
+      rowExcel.secondCheckin = row.secondCheckin ? 'Yes' : 'No';
+      rowExcel.injected = row.injected ? 'Yes' : 'No';
+      rowExcel.notQualified = row.notQualified ? 'Yes' : 'No';
+      this.dataForExcel.push(Object.values(rowExcel))
+    })
+    let reportData = {
+      title: `DANH SÁCH ĐỐI TƯỢNG ĐĂNG KÝ TIÊM VẮC XIN COVID-19 - ngày ${this.formatDate}`,
+      header: this.header,
+      data: this.dataForExcel
+    }
 
-    // this.excelService.exportExcel(reportData);
+    this.excelService.exportExcel(reportData);
   }
 
   changeCustomerData(changedData: CustomerData, i: number) {
+    this.changedCustomer.push(changedData);
     this.data[i] = changedData;
     this.countInjectedNumber();
   }
 
   countInjectedNumber() {
-    this.injectedNumber = this.data.filter(item => item.done).length;
+    this.injectedNumber = this.data.filter(item => item.injected).length;
 
     return;
+  }
+
+  saveToDB() {
+    this.api.updateDataBase(this.changedCustomer).subscribe(res => {
+      console.log(res);
+    })
+    this.changedCustomer = [];
   }
 }
 
 export interface CustomerData {
   sl: number | string;
   name: string;
-  gender: string;
   birth: string;
-  email?: string;
-  priotyId: number | string;
+  gender: string;
+  ethnic: string;
   job: string;
-  workUnit: string;
   phone: string;
+  email: string;
   indentificationCard: string;
   healthInsuranceNumber?: string;
-  ethnic: string;
-  nation: string;
-  city: string;
-  cityId: string;
-  district: string;
-  districtId: string;
-  ward: string;
-  wardId: string;
+  workUnit: string;
+  workName: string;
+  workAdress: string;
   address: string;
-  healthfacilityId: string;
-  note: string;
-  firstChecked: boolean;
-  secondChecked: boolean;
-  done: boolean;
+  ward: string;
+  district: string;
+  city: string;
+  firstCheckin?: boolean;
+  secondCheckin?: boolean;
+  injected?: boolean;
+  notQualified?: boolean;
+  note?: string;
 }
