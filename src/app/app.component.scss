@@ -83,33 +83,36 @@
       margin: 10px auto;
       position: relative;
 
-      .injected-filter, .not-injected-filter, .not-qualified-filter {
-        position: absolute;
-        width: 100px;
-        line-height: 31px;
-        background: white;
+      .filter {
+        display: block;
         text-align: center;
-        top: 0px;
-        cursor: pointer;
+        margin-bottom: 10px;
+
+        .injected-filter, .not-injected-filter, .not-qualified-filter {
+          display: inline-block;
+          line-height: 30px;
+          background: white;
+          cursor: pointer;
+          width: 150px;
+          margin: 0 5px;
+          border-radius: 4px;
+
+          &:hover {
+            background: #1890ff;
+            color: #fff;
+          }
+        }
+        .selected {
+          background: #1890ff;
+          color: #fff;
+        }
       }
 
-      .injected-filter {
-        right: -115px;
-      }
-
-      .not-injected-filter {
-        right: -230px;
-      }
-
-      .not-qualified-filter {
-        right: -375px;
-        width: auto;
-        padding: 0 5px
-      }
-
-      .selected {
-        background: #1890ff;
+      .filter-count {
+        text-align: center;
+        font-weight: bold;
         color: #fff;
+        margin-top: 10px;
       }
     }
 

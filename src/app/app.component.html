@@ -15,6 +15,14 @@
     <div class="title">DANH SÁCH ĐỐI TƯỢNG ĐĂNG KÝ TIÊM VẮC XIN COVID-19</div>
     <div class="injected-date">Ngày tiêm chủng: {{ formatDate }}</div>
     <div class="search-container">
+      <div class="filter">
+        <div class="injected-filter" [ngClass]="injectedSelected ? 'selected': 'none'"
+          (click)="injectedSelected = !injectedSelected; filterData();">Đã tiêm</div>
+        <div class="not-injected-filter" [ngClass]="notInjectedSelected ? 'selected': 'none'"
+          (click)="notInjectedSelected = !notInjectedSelected; filterData();">Chưa tiêm</div>
+        <div class="not-qualified-filter" [ngClass]="notQualifiedSelected ? 'selected': 'none'"
+          (click)="notQualifiedSelected = !notQualifiedSelected; filterData();">Không đủ điều kiện</div>
+      </div>
       <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
         <input type="text" [(ngModel)]="searchText" (ngModelChange)="filterData()" nz-input
           placeholder="Nhập tên, Số điện thoại hoặc CMND" />
@@ -22,13 +30,9 @@
       <ng-template #suffixIconButton>
         <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
       </ng-template>
-
-      <div class="injected-filter" [ngClass]="injectedSelected ? 'selected': 'none'"
-        (click)="injectedSelected = !injectedSelected; filterData();">Đã tiêm</div>
-      <div class="not-injected-filter" [ngClass]="notInjectedSelected ? 'selected': 'none'"
-        (click)="notInjectedSelected = !notInjectedSelected; filterData();">Chưa tiêm</div>
-      <div class="not-qualified-filter" [ngClass]="notQualifiedSelected ? 'selected': 'none'"
-        (click)="notQualifiedSelected = !notQualifiedSelected; filterData();">Không đủ điều kiện</div>
+      <div class="filter-count">
+        Số lượng tìm kiếm: {{ displayData.length }}
+      </div>
     </div>
     <nz-table #nestedTable [nzData]="displayData" [nzPageSize]="5">
       <thead>

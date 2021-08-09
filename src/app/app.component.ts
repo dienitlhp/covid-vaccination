@@ -19,7 +19,6 @@ export class AppComponent implements OnInit {
   showItem: boolean[] = [];
   dataForExcel: any[] = [];
   searchText = '';
-  injectedNumber = 0;
   formatDate = '';
   showModal = false;
   passwordVisible = false;
@@ -77,7 +76,6 @@ export class AppComponent implements OnInit {
       });
       const data = [...this.data];
       this.displayData = orderBy(data, 'sl', 'asc');
-      this.countInjectedNumber();
       this.willDownload = true;
     })
   }
@@ -151,7 +149,6 @@ export class AppComponent implements OnInit {
         note: item[this.header[21]] || ''
       })
     });
-    this.countInjectedNumber();
     this.displayData = [...this.data];
     this.createDatabase();
   }
@@ -229,13 +226,6 @@ export class AppComponent implements OnInit {
     this.api.updateDataBase(customerData).subscribe(res => {
       console.log(res);
     })
-    this.countInjectedNumber();
-  }
-
-  countInjectedNumber() {
-    this.injectedNumber = this.data.filter(item => item.injected).length;
-
-    return;
   }
 }
 
