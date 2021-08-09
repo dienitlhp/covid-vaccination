@@ -1,6 +1,7 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ExportExcelService } from './services/export-excel.service';
 import * as XLSX from "xlsx";
+import * as df from 'dateformat';
 import { cloneDeep, filter, orderBy } from 'lodash-es';
 import { AppService } from './app.service';
 
@@ -28,6 +29,7 @@ export class AppComponent implements OnInit {
   showLoading = false;
   injectedSelected = false;
   notInjectedSelected = false;
+  notQualifiedSelected = false;
 
   header = [
     'STT',
@@ -102,7 +104,12 @@ export class AppComponent implements OnInit {
     reader.onload = (event) => {
       const data = reader.result;
       let json;
-      workBook = XLSX.read(data, { type: 'binary' });
+      workBook = XLSX.read(data, {
+        type: 'binary',
+        cellDates: true,
+        cellText: false,
+        cellNF: false
+      });
       json = workBook.SheetNames.reduce((initial: any, name) => {
         const sheet = workBook!.Sheets[name];
         initial[name] = XLSX.utils.sheet_to_json(sheet);
@@ -116,10 +123,13 @@ export class AppComponent implements OnInit {
 
   mapData(json: any) {
     json.forEach((item: any) => {
+      const date = new Date(`${item[this.header[2]]}`);
+      date.setHours(date.getHours());
+      const birth = df(date, "dd/mm/yyyy");
       this.data.push({
         sl: item[this.header[0]] || null,
         name: item[this.header[1]] || '',
-        birth: item[this.header[2]] || '',
+        birth: birth || '',
         gender: item[this.header[3]] || '',
         ethnic: item[this.header[4]] || '',
         job: item[this.header[5]] || '',
@@ -154,19 +164,18 @@ export class AppComponent implements OnInit {
 
   filterData() {
     const filterText = this.formatString(this.searchText);
-    this.displayData = filter(this.data, (item) => {
+    const filterData = filter(this.data, (item) => {
       const name = this.formatString(item.name.toString());
       const indentificationCard = this.formatString(item.indentificationCard.toString());
       const phone = this.formatString(item.phone.toString());
-      let select = true;
-      if (this.injectedSelected && !this.notInjectedSelected) {
-        select = !!item.injected;
-      }
-      if (!this.injectedSelected && this.notInjectedSelected) {
-        select = !item.injected;
-      }
+      let select = false;
+      if (this.injectedSelected && item.injected ) select = true;
+      if (this.notInjectedSelected && !item.injected) select = true;
+      if (this.notQualifiedSelected && item.notQualified) select = true;
+      if (!this.injectedSelected && !this.notInjectedSelected && !this.notQualifiedSelected) select = true;
       return (name.includes(filterText) || indentificationCard.includes(filterText) || phone.includes(filterText)) && select;
     }) as CustomerData[];
+    this.displayData = orderBy(filterData, 'sl', 'asc');
     this.showItem.fill(false);
   }
 
@@ -214,10 +223,12 @@ export class AppComponent implements OnInit {
     this.excelService.exportExcel(reportData);
   }
 
-  changeCustomerData(changedData: CustomerData) {
-    this.changedCustomer.push(changedData);
-    const changedIndex = this.data.findIndex(item => item.sl == changedData.sl)
-    this.data[changedIndex] = changedData;
+  saveCustomerData(customerData: CustomerData) {
+    const changedIndex = this.data.findIndex(item => item.sl == customerData.sl)
+    this.data[changedIndex] = customerData;
+    this.api.updateDataBase(customerData).subscribe(res => {
+      console.log(res);
+    })
     this.countInjectedNumber();
   }
 
@@ -225,13 +236,6 @@ export class AppComponent implements OnInit {
     this.injectedNumber = this.data.filter(item => item.injected).length;
 
     return;
-  }
-
-  saveToDB() {
-    this.api.updateDataBase(this.changedCustomer).subscribe(res => {
-      console.log(res);
-    })
-    this.changedCustomer = [];
   }
 }
 

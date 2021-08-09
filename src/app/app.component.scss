@@ -83,7 +83,7 @@
       margin: 10px auto;
       position: relative;
 
-      .injected-filter, .not-injected-filter {
+      .injected-filter, .not-injected-filter, .not-qualified-filter {
         position: absolute;
         width: 100px;
         line-height: 31px;
@@ -94,11 +94,17 @@
       }
 
       .injected-filter {
-        right: -125px;
+        right: -115px;
       }
 
       .not-injected-filter {
-        right: -245px;
+        right: -230px;
+      }
+
+      .not-qualified-filter {
+        right: -375px;
+        width: auto;
+        padding: 0 5px
       }
 
       .selected {

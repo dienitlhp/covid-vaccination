@@ -15,7 +15,7 @@ export class CustomerFormComponent implements OnInit {
     return this._customerData;
   }
 
-  @Output() customerDataChange = new EventEmitter<CustomerData>();
+  @Output() saveCustomerData = new EventEmitter<CustomerData>();
 
   constructor() { }
 
@@ -23,29 +23,25 @@ export class CustomerFormComponent implements OnInit {
   }
 
   changeFirstCheckin() {
-    this.saveData();
   }
 
   changeSecondCheckin() {
-    this.saveData();
   }
 
   changeInjected() {
     if (this.customerData.injected) {
       this.customerData.notQualified = false;
     }
-    this.saveData();
   }
 
   changeNotQualified() {
     if (this.customerData.notQualified) {
       this.customerData.injected = false;
     }
-    this.saveData();
   }
 
   saveData() {
-    this.customerDataChange.emit(this.customerData);
+    this.saveCustomerData.emit(this.customerData);
   }
 
 }

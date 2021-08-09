@@ -27,6 +27,8 @@
         (click)="injectedSelected = !injectedSelected; filterData();">Đã tiêm</div>
       <div class="not-injected-filter" [ngClass]="notInjectedSelected ? 'selected': 'none'"
         (click)="notInjectedSelected = !notInjectedSelected; filterData();">Chưa tiêm</div>
+      <div class="not-qualified-filter" [ngClass]="notQualifiedSelected ? 'selected': 'none'"
+        (click)="notQualifiedSelected = !notQualifiedSelected; filterData();">Không đủ điều kiện</div>
     </div>
     <nz-table #nestedTable [nzData]="displayData" [nzPageSize]="5">
       <thead>
@@ -50,7 +52,7 @@
             <td>{{ data.injected ? 'Đã được tiêm' : 'Chưa được tiêm' }}</td>
           </tr>
           <tr [nzExpand]="showItem[i]">
-            <customer-form [customerData]="data" (customerDataChange)="changeCustomerData($event)"></customer-form>
+            <customer-form [customerData]="data" (saveCustomerData)="saveCustomerData($event)"></customer-form>
           </tr>
         </ng-template>
       </tbody>
@@ -60,9 +62,6 @@
         (click)="exportToExcel()">
         <i nz-icon nzType="download"></i>
         Export to excel
-      </button>
-      <button class="save-button" nz-button nzType="primary" nzSize="default" nzShape="round" (click)="saveToDB()">
-        Save to DB
       </button>
     </div>
   </div>
