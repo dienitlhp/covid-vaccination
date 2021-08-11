@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   showModal = false;
   passwordVisible = false;
   password?: string;
-  defaultPassword = 'vja2021';
+  defaultPassword = 'khanhdoan';
   showInputFile = false;
   showLoading = false;
   injectedSelected = false;
