@@ -13,7 +13,7 @@
 
   <div *ngIf="data.length" class="customer-data">
     <div class="title">DANH SÁCH ĐỐI TƯỢNG ĐĂNG KÝ TIÊM VẮC XIN COVID-19</div>
-    <div class="injected-date">Ngày tiêm chủng: {{ formatDate }}</div>
+    <div class="injected-date" style="font-size:16px;">Ngày tiêm chủng: {{ formatDate }}</div>
     <div class="search-container">
       <div class="filter">
         <div class="injected-filter" [ngClass]="injectedSelected ? 'selected': 'none'"
@@ -21,16 +21,16 @@
         <div class="not-injected-filter" [ngClass]="notInjectedSelected ? 'selected': 'none'"
           (click)="notInjectedSelected = !notInjectedSelected; filterData();">Chưa tiêm</div>
         <div class="not-qualified-filter" [ngClass]="notQualifiedSelected ? 'selected': 'none'"
-          (click)="notQualifiedSelected = !notQualifiedSelected; filterData();">Không đủ điều kiện</div>
+          (click)="notQualifiedSelected = !notQualifiedSelected; filterData();">Không tiêm</div>
       </div>
       <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
         <input type="text" [(ngModel)]="searchText" (ngModelChange)="filterData()" nz-input
-          placeholder="Nhập tên, Số điện thoại hoặc CMND" />
+          placeholder="Nhập tên, Số điện thoại hoặc CMND"/>
       </nz-input-group>
       <ng-template #suffixIconButton>
         <button nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i></button>
       </ng-template>
-      <div class="filter-count">
+      <div class="filter-count" style="font-size:16px;">
         Số lượng tìm kiếm: {{ displayData.length }}
       </div>
     </div>
