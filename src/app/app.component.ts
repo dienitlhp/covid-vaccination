@@ -121,9 +121,15 @@ export class AppComponent implements OnInit {
 
   mapData(json: any) {
     json.forEach((item: any) => {
-      const date = new Date(`${item[this.header[2]]}`);
-      date.setHours(date.getHours());
-      const birth = df(date, "dd/mm/yyyy");
+      let birth = item[this.header[2]] + '';
+      console.log('file: app.component.ts ~ line 125 ~ AppComponent ~ json.forEach ~ birth', birth);
+      if (birth.includes('/')) {
+        birth = item[this.header[2]];
+      } else {
+        const date = new Date(`${item[this.header[2]]}`);
+        date.setHours(date.getHours());
+        birth = df(date, "dd/mm/yyyy");
+      }
       this.data.push({
         sl: item[this.header[0]] || null,
         name: item[this.header[1]] || '',
