@@ -18,20 +18,7 @@ export class ExportExcelService {
 
     //Create a workbook with a worksheet
     let workbook = new Workbook();
-    let worksheet = workbook.addWorksheet('Danh sách đối tượng tiêm');
-
-    //Add Row and formatting
-    worksheet.mergeCells('A1', 'AA1');
-    let titleRow = worksheet.getCell('A1');
-    titleRow.value = title
-    titleRow.font = {
-      name: 'Times New Roman',
-      size: 14,
-      underline: 'single',
-      bold: true,
-      color: { argb: '000000' }
-    }
-    titleRow.alignment = { vertical: 'middle', horizontal: 'center', shrinkToFit: true }
+    let worksheet = workbook.addWorksheet('Sheet1');
 
     //Adding Header Row
     let headerRow = worksheet.addRow(header);

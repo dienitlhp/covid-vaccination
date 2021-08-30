@@ -17,6 +17,8 @@ export class CustomerFormComponent implements OnInit {
 
   @Output() saveCustomerData = new EventEmitter<CustomerData>();
 
+  listJob = ['CARGO', 'CCD', 'FCD', 'MCC', 'VJGS', 'OMC', '1 TH VJC-OMC-FM (Mr Phương APPR)', '1 TH VJC-MD.TH (Mr Phương APPR)', 'SSQA', 'SVC (sovico)', 'VJC-G1 (Galaxy One)', 'VJC-FM-VP.TH (cháu VP Thịnh)', 'VJC-FM-VPMB', 'VPMB-IT', 'VPMB-DA', 'Other'];
+
   constructor() { }
 
   ngOnInit(): void {

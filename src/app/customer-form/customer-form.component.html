@@ -2,7 +2,11 @@
   <nz-descriptions [nzTitle]="customerData.name" [nzColumn]="3">
     <nz-descriptions-item nzTitle="Giới tính">{{ customerData.gender }}</nz-descriptions-item>
     <nz-descriptions-item nzTitle="Ngày sinh">{{ customerData.birth }}</nz-descriptions-item>
-    <nz-descriptions-item nzTitle="Nghề nghiệp">{{ customerData.job }}</nz-descriptions-item>
+    <nz-descriptions-item nzTitle="Nghề nghiệp">
+      <nz-select nzSize="small" [(ngModel)]="customerData.job">
+        <nz-option *ngFor="let job of listJob" [nzValue]="job" [nzLabel]="job"></nz-option>
+      </nz-select>
+    </nz-descriptions-item>
     <nz-descriptions-item nzTitle="Điện thoại">{{ customerData.phone }}</nz-descriptions-item>
     <nz-descriptions-item nzTitle="CMT/CCCD">{{ customerData.indentificationCard }}</nz-descriptions-item>
     <nz-descriptions-item nzTitle="Địa chỉ">{{ customerData.workAdress }}</nz-descriptions-item>

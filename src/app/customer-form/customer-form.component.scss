@@ -5,3 +5,13 @@ textarea {
 .save-button {
   left: 60px;
 }
+
+::ng-deep {
+  nz-select {
+    width: 150px;
+  }
+
+  .ant-descriptions-item-label {
+    width: 100px;
+  }
+}
