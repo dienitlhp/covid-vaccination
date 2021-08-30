@@ -51,6 +51,8 @@ export class AppComponent implements OnInit {
     'Đã tiêm xong',
     'Không tiêm/ không đủ điều kiện tiêm',
     'Ghi chú',
+    'Tiêm lần 1',
+    'Tiêm lần 2'
   ]
 
   constructor(public excelService: ExportExcelService, private api: AppService) { }
@@ -207,13 +209,34 @@ export class AppComponent implements OnInit {
 
   exportToExcel() {
     this.dataForExcel = [];
-    this.data.forEach((row: any) => {
-      const rowExcel = cloneDeep(row);
-      rowExcel.firstCheckin = row.firstCheckin ? 'Yes' : 'No';
-      rowExcel.secondCheckin = row.secondCheckin ? 'Yes' : 'No';
-      rowExcel.injected = row.injected ? 'Yes' : 'No';
-      rowExcel.notQualified = row.notQualified ? 'Yes' : 'No';
-      this.dataForExcel.push(Object.values(rowExcel))
+    this.data.forEach((row: CustomerData) => {
+      const rowData = cloneDeep(row);
+      const rowExcel = [];
+      rowExcel.push(rowData.sl);
+      rowExcel.push(rowData.name);
+      rowExcel.push(rowData.birth);
+      rowExcel.push(rowData.gender);
+      rowExcel.push(rowData.ethnic);
+      rowExcel.push(rowData.job);
+      rowExcel.push(rowData.phone);
+      rowExcel.push(rowData.email);
+      rowExcel.push(rowData.indentificationCard);
+      rowExcel.push(rowData.healthInsuranceNumber);
+      rowExcel.push(rowData.workUnit);
+      rowExcel.push(rowData.workName);
+      rowExcel.push(rowData.workAdress);
+      rowExcel.push(rowData.address);
+      rowExcel.push(rowData.ward);
+      rowExcel.push(rowData.district);
+      rowExcel.push(rowData.city);
+      rowExcel.push(rowData.firstCheckin ? 'Yes' : 'No');
+      rowExcel.push(rowData.secondCheckin ? 'Yes' : 'No');
+      rowExcel.push(rowData.injected ? 'Yes' : 'No');
+      rowExcel.push(rowData.notQualified ? 'Yes' : 'No');
+      rowExcel.push(rowData.note);
+      rowExcel.push(rowData.firstInjected ? 'Yes' : 'No');
+      rowExcel.push(rowData.secondInjected ? 'Yes' : 'No');
+      this.dataForExcel.push(rowExcel);
     })
     let reportData = {
       title: `DANH SÁCH ĐỐI TƯỢNG ĐĂNG KÝ TIÊM VẮC XIN COVID-19 - ngày ${this.formatDate}`,
