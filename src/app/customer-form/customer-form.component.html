@@ -2,7 +2,7 @@
   <nz-descriptions [nzTitle]="customerData.name" [nzColumn]="3">
     <nz-descriptions-item nzTitle="Giới tính">{{ customerData.gender }}</nz-descriptions-item>
     <nz-descriptions-item nzTitle="Ngày sinh">{{ customerData.birth }}</nz-descriptions-item>
-    <nz-descriptions-item nzTitle="Nghề nghiệp">
+    <nz-descriptions-item nzTitle="Bộ phận">
       <nz-select nzSize="small" [(ngModel)]="customerData.job">
         <nz-option *ngFor="let job of listJob" [nzValue]="job" [nzLabel]="job"></nz-option>
       </nz-select>
