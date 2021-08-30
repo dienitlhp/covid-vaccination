@@ -12,6 +12,10 @@
       <label class="injection-info" nz-checkbox [(ngModel)]="customerData.injected" (ngModelChange)="changeInjected()">Đã tiêm xong</label>
       <label class="injection-info" nz-checkbox [(ngModel)]="customerData.notQualified" (ngModelChange)="changeNotQualified()">Không tiêm/ không đủ điều kiện tiêm</label>
     </nz-descriptions-item>
+    <nz-descriptions-item [nzSpan]="3" nzTitle="Tình trạng">
+      <label class="injection-info" nz-checkbox [(ngModel)]="customerData.firstInjected">Tiêm lần 1</label>
+      <label class="injection-info" nz-checkbox [(ngModel)]="customerData.secondInjected">Tiêm lần 2</label>
+    </nz-descriptions-item>
     <nz-descriptions-item [nzSpan]="3" nzTitle="Ghi chú">
       <textarea rows="2" nz-input [(ngModel)]="customerData.note"></textarea>
     </nz-descriptions-item>

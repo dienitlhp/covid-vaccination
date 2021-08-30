@@ -16,12 +16,11 @@
     <div class="injected-date" style="font-size:16px;">Ngày tiêm chủng: {{ formatDate }}</div>
     <div class="search-container">
       <div class="filter">
-        <div class="injected-filter" [ngClass]="injectedSelected ? 'selected': 'none'"
-          (click)="injectedSelected = !injectedSelected; filterData();">Đã tiêm</div>
-        <div class="not-injected-filter" [ngClass]="notInjectedSelected ? 'selected': 'none'"
-          (click)="notInjectedSelected = !notInjectedSelected; filterData();">Chưa tiêm</div>
-        <div class="not-qualified-filter" [ngClass]="notQualifiedSelected ? 'selected': 'none'"
-          (click)="notQualifiedSelected = !notQualifiedSelected; filterData();">Không tiêm</div>
+        <nz-radio-group [(ngModel)]="injectedFilter" (ngModelChange)="filterData()">
+          <label nz-radio nzValue="injectedSelected">Đã tiêm</label>
+          <label nz-radio nzValue="notInjectedSelected">Chưa tiêm</label>
+          <label nz-radio nzValue="notQualifiedSelected">Không tiêm</label>
+        </nz-radio-group>
       </div>
       <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
         <input type="text" [(ngModel)]="searchText" (ngModelChange)="filterData()" nz-input
@@ -53,7 +52,7 @@
             <td>{{ data.gender }}</td>
             <td>{{ data.birth }}</td>
             <td>{{ data.phone }}</td>
-            <td>{{ data.injected ? 'Đã được tiêm' : 'Chưa được tiêm' }}</td>
+            <td>{{ data.notQualified ? 'Không đủ điều kiện tiêm' : data.injected ? 'Đã tiêm' : 'Chưa tiêm' }}</td>
           </tr>
           <tr [nzExpand]="showItem[i]">
             <customer-form [customerData]="data" (saveCustomerData)="saveCustomerData($event)"></customer-form>

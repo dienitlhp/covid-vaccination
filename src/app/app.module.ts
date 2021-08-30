@@ -19,6 +19,7 @@ import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
 
 registerLocaleData(en);
 
@@ -41,7 +42,8 @@ registerLocaleData(en);
     NzDescriptionsModule,
     NzCheckboxModule,
     NzModalModule,
-    NzSpinModule
+    NzSpinModule,
+    NzRadioModule
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent]

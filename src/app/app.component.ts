@@ -26,9 +26,7 @@ export class AppComponent implements OnInit {
   defaultPassword = 'khanhdoan';
   showInputFile = false;
   showLoading = false;
-  injectedSelected = false;
-  notInjectedSelected = false;
-  notQualifiedSelected = false;
+  injectedFilter = '';
 
   header = [
     'STT',
@@ -122,7 +120,6 @@ export class AppComponent implements OnInit {
   mapData(json: any) {
     json.forEach((item: any) => {
       let birth = item[this.header[2]] + '';
-      console.log('file: app.component.ts ~ line 125 ~ AppComponent ~ json.forEach ~ birth', birth);
       if (birth.includes('/')) {
         birth = item[this.header[2]];
       } else {
@@ -152,7 +149,9 @@ export class AppComponent implements OnInit {
         secondCheckin: item[this.header[18]] === 'Yes' ? true : false,
         injected: item[this.header[19]] === 'Yes' ? true : false,
         notQualified: item[this.header[20]] === 'Yes' ? true : false,
-        note: item[this.header[21]] || ''
+        note: item[this.header[21]] || '',
+        firstInjected: item[this.header[22]] === 'Yes' ? true : false,
+        secondInjected: item[this.header[23]] === 'Yes' ? true : false,
       })
     });
     this.displayData = [...this.data];
@@ -172,10 +171,9 @@ export class AppComponent implements OnInit {
       const indentificationCard = this.formatString(item.indentificationCard.toString());
       const phone = this.formatString(item.phone.toString());
       let select = false;
-      if (this.injectedSelected && item.injected ) select = true;
-      if (this.notInjectedSelected && !item.injected) select = true;
-      if (this.notQualifiedSelected && item.notQualified) select = true;
-      if (!this.injectedSelected && !this.notInjectedSelected && !this.notQualifiedSelected) select = true;
+      if (this.injectedFilter === 'injectedSelected' && item.injected) select = true;
+      if (this.injectedFilter === 'notInjectedSelected' && !item.injected && !item.notQualified) select = true;
+      if (this.injectedFilter === 'notQualifiedSelected' && item.notQualified) select = true;
       return (name.includes(filterText) || indentificationCard.includes(filterText) || phone.includes(filterText)) && select;
     }) as CustomerData[];
     this.displayData = orderBy(filterData, 'sl', 'asc');
@@ -257,5 +255,7 @@ export interface CustomerData {
   secondCheckin?: boolean;
   injected?: boolean;
   notQualified?: boolean;
+  firstInjected?: boolean;
+  secondInjected?: boolean;
   note?: string;
 }
